@@ -3,5 +3,5 @@
 Integrantes:
 
 - 
-- 
+- Diego Miguel Calancho Llerena
 - Mijael Pol Escobar Aguilar
