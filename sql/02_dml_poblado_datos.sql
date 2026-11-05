@@ -58,3 +58,11 @@ INSERT INTO empleado (id_persona, codigo_oficina, id_proyecto, cargo, fecha_ingr
 (13, 'OFIC-LL',   NULL, 'GESTION',    '2025-01-10', NULL, 'ACTIVO'),
 (14, 'OFIC-MGG',  1,    'GUARDIA',    '2025-02-01', NULL, 'ACTIVO'),
 (15, 'OFIC-LL',   2,    'LIMPIEZA',   '2025-06-01', NULL, 'ACTIVO');
+-- sueldo
+INSERT INTO sueldo (id_empleado, monto_mensual, fecha_inicio, fecha_fin) VALUES
+(1, 4500.00, '2024-03-01', '2025-12-31'),
+(1, 5000.00, '2026-01-01', NULL),
+(2, 1800.00, '2024-05-15', NULL),
+(3, 2500.00, '2025-01-10', NULL),
+(4, 1500.00, '2025-02-01', NULL),
+(5, 1300.00, '2025-06-01', NULL);
