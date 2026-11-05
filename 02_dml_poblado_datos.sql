@@ -213,7 +213,7 @@ WHERE s.fecha_fin IS NULL;
 COMMIT;
 
 -- ---------------------------------------------------------------------
--- MÓDULO 2 (continuación): SEPARACIONES Y VENTAS
+-- MÓDULO 2: SEPARACIONES Y VENTAS
 -- ---------------------------------------------------------------------
 
 BEGIN;
@@ -253,7 +253,7 @@ VALUES
 COMMIT;
 
 -- ---------------------------------------------------------------------
--- MÓDULO 3 (continuación): CUOTAS, PAGOS Y COMISIONES
+-- MÓDULO 3: CUOTAS, PAGOS Y COMISIONES
 -- ---------------------------------------------------------------------
 
 BEGIN;
@@ -346,7 +346,7 @@ VALUES
 COMMIT;
 
 -- =====================================================================
--- PARTE 2: UPDATE  (uno por tabla; todos con WHERE)
+-- PARTE 2: UPDATE
 -- =====================================================================
 
 UPDATE proyecto
@@ -449,7 +449,7 @@ SET    medio_pago = 'TRANSFERENCIA'
 WHERE  id_comision = 3 AND fecha_pago = '2026-08-01';
 
 -- =====================================================================
--- PARTE 3: VERIFICACIÓN (registros por tabla; todas deben tener 5 o más)
+-- PARTE 3: VERIFICACIÓN
 -- =====================================================================
 
 SELECT 'proyecto' AS tabla, count(*) AS registros FROM proyecto
