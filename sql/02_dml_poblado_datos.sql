@@ -26,3 +26,19 @@ INSERT INTO manzana (id_sector, codigo) VALUES
 (3, 'Ñ'),
 (4, 'C'),
 (5, 'E');
+-- lote
+INSERT INTO lote (id_manzana, numero, tipo_lote, estado_lote, area_m2, perimetro_m, frente_m, fondo_m, lado_izq_m, lado_der_m,
+                  colindante_frente, colindante_fondo, colindante_izq, colindante_der, partida_registral,
+                  es_esquina, frente_parque, sobre_avenida) VALUES
+(1, 1, 'VENDIBLE', 'DISPONIBLE', 120.00, 46.00,  8.00, 15.00, 15.00, 15.00,
+    'Calle 1', 'Lote 10', 'Calle 2', 'Lote 2', 'P06100001', TRUE,  FALSE, FALSE),
+(1, 2, 'VENDIBLE', 'DISPONIBLE', 120.00, 46.00,  8.00, 15.00, 15.00, 15.00,
+    'Calle 1', 'Lote 11', 'Lote 1', 'Lote 3', 'P06100002', FALSE, FALSE, FALSE),
+(2, 1, 'VENDIBLE', 'DISPONIBLE', 200.00, 60.00, 10.00, 20.00, 20.00, 20.00,
+    'Parque Central', 'Lote 12', 'Calle 3', 'Lote 2', 'P06100003', FALSE, TRUE, FALSE),
+(3, 5, 'VENDIBLE', 'DISPONIBLE', 162.00, 54.00,  9.00, 18.00, 18.00, 18.00,
+    'Av. Principal', 'Lote 9', 'Lote 4', 'Lote 6', 'P06100004', FALSE, FALSE, TRUE),
+(4, 3, 'FCMP',     'BLOQUEADO',  300.00, 70.00, 15.00, 20.00, 20.00, 20.00,
+    'Calle 5', 'Área verde', 'Lote 2', 'Lote 4', 'P06100005', FALSE, FALSE, FALSE),
+(5, 1, 'VENDIBLE', 'DISPONIBLE', 150.00, 50.00, 10.00, 15.00, 15.00, 15.00,
+    'Calle 6', 'Lote 8', 'Calle 7', 'Lote 2', 'P06100006', TRUE,  FALSE, FALSE);
