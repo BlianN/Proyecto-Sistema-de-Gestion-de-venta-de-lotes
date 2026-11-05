@@ -50,3 +50,29 @@ INSERT INTO venta_participante (id_venta, id_persona, rol) VALUES
 (3, 7, 'TITULAR'),       
 (4, 3, 'TITULAR'),       
 (5, 10, 'TITULAR');
+
+-- Actualizaciones de datos (updates)
+-- 1. Actualizar el teléfono de una persona específica
+UPDATE persona 
+SET telefono = '999000111', telefono_2 = '054-999999' 
+WHERE id_persona = 1;
+
+-- 2. Cambiar la ocupación y estado civil de una persona natural
+UPDATE persona_natural 
+SET ocupacion = 'Jefe de Proyectos', estado_civil = 'Casado' 
+WHERE id_persona = 1;
+
+-- 3. Cambiar el estado de un asesor a inactivo
+UPDATE asesor 
+SET estado = 'INACTIVO' 
+WHERE id_persona = 4;
+
+-- 4. Modificar el estado de una separación a vencida
+UPDATE separacion 
+SET estado = 'VENCIDA', destino_monto = 'PENALIDAD' 
+WHERE id_separacion = 1;
+
+-- 5. Agregar un motivo de excepción a una venta que fue por credito
+UPDATE venta 
+SET motivo_excepcion = 'Cliente solicitó ampliación de plazo' 
+WHERE id_venta = 1;
