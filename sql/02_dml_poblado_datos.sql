@@ -74,3 +74,26 @@ INSERT INTO pago_sueldo (id_sueldo, id_empleado, mes, anio, fecha_pago, monto, m
 (5, 4,  9, 2026, '2026-09-30', 1500.00, 'EFECTIVO'),
 (6, 5,  9, 2026, '2026-09-30', 1300.00, 'EFECTIVO'),
 (2, 1, 10, 2026, '2026-10-31', 5000.00, 'TRANSFERENCIA');
+-- =========================================================
+-- UPDATE - MÓDULO 1: Proyectos y Lotes
+-- =========================================================
+
+-- proyecto: el proyecto en planificación pasa a venta
+UPDATE proyecto SET estado = 'EN_VENTA' WHERE codigo = 'MCH-01';
+
+-- sector: renumeración de una etapa
+UPDATE sector SET nombre = 'III' WHERE id_proyecto = 2 AND nombre = 'II';
+
+-- manzana: corrección de código
+UPDATE manzana SET codigo = 'B2' WHERE id_sector = 1 AND codigo = 'B1';
+
+-- lote: el lote 1 de la manzana A se vendió en cuotas
+UPDATE lote SET estado_lote = 'EN_CUOTAS' WHERE id_manzana = 1 AND numero = 1;
+
+-- precio_lote: cambio de precio (RN-04: se cierra el vigente y se crea uno nuevo)
+BEGIN;
+UPDATE precio_lote SET fecha_hasta = '2026-10-31'
+WHERE id_lote = 3 AND fecha_hasta IS NULL;
+INSERT INTO precio_lote (id_lote, precio, fecha_desde, fecha_hasta, motivo)
+VALUES (3, 65000.00, '2026-11-01', NULL, 'Aumento por lote frente a parque');
+COMMIT;
