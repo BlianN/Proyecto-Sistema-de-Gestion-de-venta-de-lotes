@@ -66,3 +66,11 @@ INSERT INTO sueldo (id_empleado, monto_mensual, fecha_inicio, fecha_fin) VALUES
 (3, 2500.00, '2025-01-10', NULL),
 (4, 1500.00, '2025-02-01', NULL),
 (5, 1300.00, '2025-06-01', NULL);
+-- pago_sueldo
+INSERT INTO pago_sueldo (id_sueldo, id_empleado, mes, anio, fecha_pago, monto, medio_pago) VALUES
+(2, 1,  9, 2026, '2026-09-30', 5000.00, 'TRANSFERENCIA'),
+(3, 2,  9, 2026, '2026-09-30', 1800.00, 'TRANSFERENCIA'),
+(4, 3,  9, 2026, '2026-09-30', 2500.00, 'TRANSFERENCIA'),
+(5, 4,  9, 2026, '2026-09-30', 1500.00, 'EFECTIVO'),
+(6, 5,  9, 2026, '2026-09-30', 1300.00, 'EFECTIVO'),
+(2, 1, 10, 2026, '2026-10-31', 5000.00, 'TRANSFERENCIA');
