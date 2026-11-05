@@ -97,3 +97,25 @@ WHERE id_lote = 3 AND fecha_hasta IS NULL;
 INSERT INTO precio_lote (id_lote, precio, fecha_desde, fecha_hasta, motivo)
 VALUES (3, 65000.00, '2026-11-01', NULL, 'Aumento por lote frente a parque');
 COMMIT;
+-- =========================================================
+-- UPDATE - MÓDULO 4: Personal y Sueldos
+-- =========================================================
+
+-- empleado: cese de personal y cierre de su sueldo vigente
+UPDATE empleado SET estado = 'CESADO', fecha_cese = '2026-10-15'
+WHERE id_empleado = 5;
+
+UPDATE sueldo SET fecha_fin = '2026-10-15'
+WHERE id_empleado = 5 AND fecha_fin IS NULL;
+
+-- sueldo: aumento (RN-17: se cierra el vigente y se crea uno nuevo)
+BEGIN;
+UPDATE sueldo SET fecha_fin = '2026-10-31'
+WHERE id_empleado = 3 AND fecha_fin IS NULL;
+INSERT INTO sueldo (id_empleado, monto_mensual, fecha_inicio, fecha_fin)
+VALUES (3, 2700.00, '2026-11-01', NULL);
+COMMIT;
+
+-- pago_sueldo: corrección del medio de pago
+UPDATE pago_sueldo SET medio_pago = 'TRANSFERENCIA'
+WHERE id_empleado = 4 AND mes = 9 AND anio = 2026;
