@@ -42,3 +42,11 @@ INSERT INTO lote (id_manzana, numero, tipo_lote, estado_lote, area_m2, perimetro
     'Calle 5', 'Área verde', 'Lote 2', 'Lote 4', 'P06100005', FALSE, FALSE, FALSE),
 (5, 1, 'VENDIBLE', 'DISPONIBLE', 150.00, 50.00, 10.00, 15.00, 15.00, 15.00,
     'Calle 6', 'Lote 8', 'Calle 7', 'Lote 2', 'P06100006', TRUE,  FALSE, FALSE);
+-- precio_lote
+INSERT INTO precio_lote (id_lote, precio, fecha_desde, fecha_hasta, motivo) VALUES
+(1, 35000.00, '2025-01-01', '2026-06-30', 'Precio de lanzamiento'),
+(1, 38000.00, '2026-07-01', NULL,         'Aumento por pocos lotes disponibles'),
+(2, 36000.00, '2025-01-01', NULL,         'Precio de lanzamiento'),
+(3, 62000.00, '2025-01-01', NULL,         'Precio de lanzamiento'),
+(4, 52000.00, '2025-01-01', NULL,         'Precio de lanzamiento'),
+(6, 48000.00, '2025-06-01', NULL,         'Precio de lanzamiento');
