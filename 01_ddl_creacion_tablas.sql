@@ -342,7 +342,7 @@ CREATE UNIQUE INDEX uq_oficina_central
     ON oficina (es_central) WHERE es_central;
 
 -- =====================================================================
--- ÍNDICES DE APOYO (PostgreSQL no indexa las claves foráneas solo)
+-- ÍNDICES DE APOYO (claves foráneas)
 -- =====================================================================
 
 CREATE INDEX ix_precio_lote_lote        ON precio_lote (id_lote);
@@ -365,7 +365,7 @@ CREATE INDEX ix_empleado_proyecto       ON empleado (id_proyecto);
 CREATE INDEX ix_sueldo_empleado         ON sueldo (id_empleado);
 
 -- =====================================================================
--- TRIGGERS (reglas que no caben en una sola restricción, informe 5.3)
+-- TRIGGERS (reglas que no caben en una sola restricción)
 -- =====================================================================
 
 CREATE FUNCTION fn_subtipo_coincide_con_persona() RETURNS trigger AS $$
