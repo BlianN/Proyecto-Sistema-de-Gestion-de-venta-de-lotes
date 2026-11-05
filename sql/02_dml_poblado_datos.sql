@@ -50,3 +50,11 @@ INSERT INTO precio_lote (id_lote, precio, fecha_desde, fecha_hasta, motivo) VALU
 (3, 62000.00, '2025-01-01', NULL,         'Precio de lanzamiento'),
 (4, 52000.00, '2025-01-01', NULL,         'Precio de lanzamiento'),
 (6, 48000.00, '2025-06-01', NULL,         'Precio de lanzamiento');
+
+-- empleado
+INSERT INTO empleado (id_persona, codigo_oficina, id_proyecto, cargo, fecha_ingreso, fecha_cese, estado) VALUES
+(11, 'OFIC-CRDO', NULL, 'GERENTE',    '2024-03-01', NULL, 'ACTIVO'),
+(12, 'OFIC-CRDO', NULL, 'SECRETARIA', '2024-05-15', NULL, 'ACTIVO'),
+(13, 'OFIC-LL',   NULL, 'GESTION',    '2025-01-10', NULL, 'ACTIVO'),
+(14, 'OFIC-MGG',  1,    'GUARDIA',    '2025-02-01', NULL, 'ACTIVO'),
+(15, 'OFIC-LL',   2,    'LIMPIEZA',   '2025-06-01', NULL, 'ACTIVO');
