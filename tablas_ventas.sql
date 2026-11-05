@@ -1,3 +1,12 @@
+CREATE TABLE lote (
+    id_lote SERIAL PRIMARY KEY,
+    estado VARCHAR(20) DEFAULT 'DISPONIBLE'
+);
+
+CREATE TABLE oficina (
+    codigo_oficina VARCHAR(10) PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL
+);
 CREATE TABLE persona (
     id_persona SERIAL PRIMARY KEY,
     tipo_persona CHAR(1) NOT NULL CHECK (tipo_persona IN ('N', 'J')), 
