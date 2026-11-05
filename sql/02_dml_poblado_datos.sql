@@ -18,3 +18,11 @@ INSERT INTO sector (id_proyecto, tipo_sector, nombre) VALUES
 (1, 'ZONA',  'C'),
 (2, 'ETAPA', 'I'),
 (2, 'ETAPA', 'II');
+-- manzana
+INSERT INTO manzana (id_sector, codigo) VALUES
+(1, 'A'),
+(1, 'B1'),
+(2, 'D2'),
+(3, 'Ñ'),
+(4, 'C'),
+(5, 'E');
