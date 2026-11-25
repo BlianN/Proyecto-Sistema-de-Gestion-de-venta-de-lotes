@@ -1,13 +1,15 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from typing import Optional
-from datetime import date
+import io
+import csv
 import psycopg
 from psycopg.rows import dict_row
 
 app = FastAPI(
     title="API Inmobiliaria - Entregable 1",
-    description="Operaciones CRUD complejas sobre 3 o más tablas relacionadas en PostgreSQL"
+    description="Operaciones CRUD complejas (3+ tablas) y Reportes con GROUP BY / HAVING exportables a CSV/Excel"
 )
 
 # ==========================================
@@ -35,18 +37,14 @@ class VentaCompletaCreate(BaseModel):
     id_persona_titular: int
 
 class ClienteJuridicoCreate(BaseModel):
-    # Datos contacto empresa (tabla persona)
     direccion_empresa: str
     telefono_empresa: str
     correo_empresa: str
-    # Datos empresa (tabla persona_juridica)
     ruc: str
     razon_social: str
-    # Datos contacto representante (tabla persona)
     direccion_rep: str
     telefono_rep: str
     correo_rep: str
-    # Datos personales representante (tabla persona_natural)
     tipo_documento: str = "DNI"
     nro_documento: str
     nombres: str
@@ -66,7 +64,6 @@ def registrar_venta_completa(datos: VentaCompletaCreate):
     with get_connection() as conn:
         try:
             with conn.cursor() as cur:
-                # Verificar que el lote exista y esté DISPONIBLE
                 cur.execute("SELECT estado FROM lote WHERE id_lote = %s FOR UPDATE;", (datos.id_lote,))
                 lote = cur.fetchone()
                 if not lote:
@@ -74,7 +71,6 @@ def registrar_venta_completa(datos: VentaCompletaCreate):
                 if lote["estado"] != "DISPONIBLE":
                     raise HTTPException(status_code=400, detail=f"El lote no está disponible (Estado: {lote['estado']})")
 
-                # 1. Insertar en tabla VENTA
                 cur.execute("""
                     INSERT INTO venta (
                         id_lote, id_separacion, id_asesor, codigo_oficina, fecha_venta,
@@ -92,22 +88,15 @@ def registrar_venta_completa(datos: VentaCompletaCreate):
                 ))
                 id_venta = cur.fetchone()["id_venta"]
 
-                # 2. Insertar en tabla VENTA_PARTICIPANTE
                 cur.execute("""
                     INSERT INTO venta_participante (id_venta, id_persona, rol)
                     VALUES (%s, %s, 'TITULAR');
                 """, (id_venta, datos.id_persona_titular))
 
-                # 3. Actualizar estado en tabla LOTE
-                cur.execute("""
-                    UPDATE lote SET estado = 'VENDIDO' WHERE id_lote = %s;
-                """, (datos.id_lote,))
+                cur.execute("UPDATE lote SET estado = 'VENDIDO' WHERE id_lote = %s;", (datos.id_lote,))
 
-                # 4. Si existe separación previa, actualizar tabla SEPARACION
                 if datos.id_separacion is not None:
-                    cur.execute("""
-                        UPDATE separacion SET estado = 'CONVERTIDA' WHERE id_separacion = %s;
-                    """, (datos.id_separacion,))
+                    cur.execute("UPDATE separacion SET estado = 'CONVERTIDA' WHERE id_separacion = %s;", (datos.id_separacion,))
 
             conn.commit()
             return {
@@ -124,21 +113,19 @@ def registrar_venta_completa(datos: VentaCompletaCreate):
 
 # ==========================================
 # 2. POST: REGISTRAR CLIENTE JURÍDICO + REPRESENTANTE (3 TABLAS)
-# Tablas: persona (2 registros), persona_natural, persona_juridica
+# Tablas: persona, persona_natural, persona_juridica
 # ==========================================
 @app.post("/api/clientes/juridicos", status_code=201)
 def registrar_cliente_juridico(datos: ClienteJuridicoCreate):
     with get_connection() as conn:
         try:
             with conn.cursor() as cur:
-                # 1. Insertar contacto del representante en PERSONA ('N')
                 cur.execute("""
                     INSERT INTO persona (tipo_persona, direccion, telefono, correo)
                     VALUES ('N', %s, %s, %s) RETURNING id_persona;
                 """, (datos.direccion_rep, datos.telefono_rep, datos.correo_rep))
                 id_rep = cur.fetchone()["id_persona"]
 
-                # 2. Insertar datos en PERSONA_NATURAL
                 cur.execute("""
                     INSERT INTO persona_natural (
                         id_persona, tipo_documento, nro_documento, nombres,
@@ -149,14 +136,12 @@ def registrar_cliente_juridico(datos: ClienteJuridicoCreate):
                     datos.apellido_paterno, datos.apellido_materno, datos.nacionalidad
                 ))
 
-                # 3. Insertar contacto de la empresa en PERSONA ('J')
                 cur.execute("""
                     INSERT INTO persona (tipo_persona, direccion, telefono, correo)
                     VALUES ('J', %s, %s, %s) RETURNING id_persona;
                 """, (datos.direccion_empresa, datos.telefono_empresa, datos.correo_empresa))
                 id_empresa = cur.fetchone()["id_persona"]
 
-                # 4. Insertar datos en PERSONA_JURIDICA vinculando al representante
                 cur.execute("""
                     INSERT INTO persona_juridica (id_persona, id_representante, ruc, razon_social)
                     VALUES (%s, %s, %s, %s);
@@ -189,18 +174,13 @@ def anular_venta(id_venta: int, datos: AnulacionVentaUpdate):
                 if venta["estado_venta"] == "ANULADA":
                     raise HTTPException(status_code=400, detail="La venta ya está anulada")
 
-                # 1. Actualizar VENTA
                 cur.execute("""
                     UPDATE venta SET estado_venta = 'ANULADA', motivo_excepcion = %s
                     WHERE id_venta = %s;
                 """, (datos.motivo_excepcion, id_venta))
 
-                # 2. Liberar LOTE
-                cur.execute("""
-                    UPDATE lote SET estado = 'DISPONIBLE' WHERE id_lote = %s;
-                """, (venta["id_lote"],))
+                cur.execute("UPDATE lote SET estado = 'DISPONIBLE' WHERE id_lote = %s;", (venta["id_lote"],))
 
-                # 3. Actualizar SEPARACION asociada si existe
                 if venta["id_separacion"] is not None:
                     cur.execute("""
                         UPDATE separacion SET estado = 'VENCIDA', destino_monto = 'PENALIDAD'
@@ -221,7 +201,6 @@ def anular_venta(id_venta: int, datos: AnulacionVentaUpdate):
 
 # ==========================================
 # 4. GET: CONSULTA CONSOLIDADA DE VENTAS (6 TABLAS)
-# Tablas: venta, lote, oficina, venta_participante, persona, persona_natural/juridica
 # ==========================================
 @app.get("/api/ventas/{id_venta}")
 def obtener_detalle_venta(id_venta: int):
@@ -249,3 +228,72 @@ def obtener_detalle_venta(id_venta: int):
             if not resultado:
                 raise HTTPException(status_code=404, detail="Detalle de venta no encontrado")
             return {"detalle_venta": resultado}
+
+# ==========================================
+# 5. GET: REPORTE CON GROUP BY + HAVING Y EXPORTACIÓN CSV/EXCEL
+# Tablas: venta, asesor, persona_natural, oficina
+# ==========================================
+@app.get("/api/reportes/ventas-asesores/exportar")
+def exportar_reporte_ventas_csv(
+    min_ventas: int = Query(1, ge=1, description="Filtro HAVING: cantidad mínima de ventas realizadas"),
+    min_monto_neto: float = Query(45000.0, ge=0, description="Filtro HAVING: monto neto mínimo acumulado")
+):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT 
+                    o.codigo_oficina,
+                    o.nombre AS oficina,
+                    a.id_asesor,
+                    pn.nro_documento AS dni_asesor,
+                    pn.nombres || ' ' || pn.apellido_paterno AS nombre_asesor,
+                    a.estado AS estado_asesor,
+                    COUNT(v.id_venta) AS total_ventas,
+                    SUM(v.precio_lista) AS total_precio_lista,
+                    SUM(v.descuento) AS total_descuentos,
+                    SUM(v.precio_lista - v.descuento) AS monto_neto_vendido,
+                    SUM(v.inicial) AS total_inicial_recaudada,
+                    ROUND(AVG(v.precio_lista - v.descuento), 2) AS ticket_promedio
+                FROM venta v
+                INNER JOIN asesor a ON v.id_asesor = a.id_asesor
+                INNER JOIN persona_natural pn ON a.id_persona = pn.id_persona
+                INNER JOIN oficina o ON v.codigo_oficina = o.codigo_oficina
+                WHERE v.estado_venta <> 'ANULADA'
+                GROUP BY 
+                    o.codigo_oficina, 
+                    o.nombre, 
+                    a.id_asesor, 
+                    pn.nro_documento, 
+                    pn.nombres, 
+                    pn.apellido_paterno, 
+                    a.estado
+                HAVING 
+                    COUNT(v.id_venta) >= %s 
+                    AND SUM(v.precio_lista - v.descuento) >= %s
+                ORDER BY monto_neto_vendido DESC;
+            """, (min_ventas, min_monto_neto))
+            filas = cur.fetchall()
+
+    if not filas:
+        raise HTTPException(
+            status_code=404,
+            detail="No existen grupos que cumplan con los criterios del filtro HAVING."
+        )
+
+    # Generar el archivo CSV en memoria con BOM UTF-8 para apertura directa en Excel
+    buffer = io.StringIO()
+    buffer.write("\ufeff")
+    columnas = list(filas[0].keys())
+    writer = csv.DictWriter(buffer, fieldnames=columnas, delimiter=";")
+    writer.writeheader()
+    writer.writerows(filas)
+    buffer.seek(0)
+
+    headers = {
+        "Content-Disposition": 'attachment; filename="reporte_ventas_asesores.csv"'
+    }
+    return StreamingResponse(
+        iter([buffer.getvalue()]),
+        media_type="text/csv; charset=utf-8",
+        headers=headers
+    )
