@@ -35,3 +35,25 @@ CREATE TABLE pago_sueldo (
         CHECK (medio_pago IN ('EFECTIVO', 'DEPOSITO', 'TRANSFERENCIA')),
     UNIQUE (id_empleado, anio, mes)                   -- RN-18
 );
+-- =====================================================
+-- RESTRICCIONES ADICIONALES - MODULO 4
+-- =====================================================
+
+-- Validar el estado laboral del empleado
+ALTER TABLE empleado
+ADD CONSTRAINT chk_estado_empleado
+CHECK (
+    (estado = 'ACTIVO' AND fecha_cese IS NULL)
+    OR
+    (estado = 'CESADO' AND fecha_cese IS NOT NULL)
+);
+
+-- Garantizar que el sueldo pertenezca al empleado
+ALTER TABLE sueldo
+ADD CONSTRAINT uq_sueldo_empleado
+UNIQUE (id_sueldo, id_empleado);
+
+ALTER TABLE pago_sueldo
+ADD CONSTRAINT fk_pago_sueldo_empleado
+FOREIGN KEY (id_sueldo, id_empleado)
+REFERENCES sueldo(id_sueldo, id_empleado);
