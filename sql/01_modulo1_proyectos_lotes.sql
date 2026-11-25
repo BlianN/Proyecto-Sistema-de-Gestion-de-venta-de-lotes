@@ -65,3 +65,14 @@ CREATE TABLE precio_lote (
 -- RN-04: cada lote tiene un solo precio vigente
 CREATE UNIQUE INDEX uq_precio_lote_vigente
     ON precio_lote (id_lote) WHERE fecha_hasta IS NULL;
+-- =====================================================
+-- RESTRICCIONES ADICIONALES - MODULO 1
+-- =====================================================
+
+-- RN-02: los lotes no vendibles no pueden venderse
+ALTER TABLE lote
+ADD CONSTRAINT chk_lote_no_vendible
+CHECK (
+    tipo_lote = 'VENDIBLE'
+    OR estado_lote = 'BLOQUEADO'
+);
