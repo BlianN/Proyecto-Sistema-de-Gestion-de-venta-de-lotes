@@ -101,12 +101,20 @@ COMMIT;
 -- UPDATE - MÓDULO 4: Personal y Sueldos
 -- =========================================================
 
--- empleado: cese de personal y cierre de su sueldo vigente
-UPDATE empleado SET estado = 'CESADO', fecha_cese = '2026-10-15'
+-- empleado: cese de personal y cierre de sueldo vigente
+BEGIN;
+
+UPDATE empleado
+SET estado = 'CESADO',
+    fecha_cese = '2026-10-15'
 WHERE id_empleado = 5;
 
-UPDATE sueldo SET fecha_fin = '2026-10-15'
-WHERE id_empleado = 5 AND fecha_fin IS NULL;
+UPDATE sueldo
+SET fecha_fin = '2026-10-15'
+WHERE id_empleado = 5
+AND fecha_fin IS NULL;
+
+COMMIT;
 
 -- sueldo: aumento (RN-17: se cierra el vigente y se crea uno nuevo)
 BEGIN;
