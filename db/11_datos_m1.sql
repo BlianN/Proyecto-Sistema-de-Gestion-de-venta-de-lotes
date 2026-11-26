@@ -1,7 +1,5 @@
 -- =====================================================================
 -- DATOS DE PRUEBA - MÓDULO 1: PROYECTOS Y LOTES
--- Responsable: Ian Anci
--- Se ejecuta en una base recién creada, así que los id empiezan en 1.
 -- =====================================================================
 
 BEGIN;
