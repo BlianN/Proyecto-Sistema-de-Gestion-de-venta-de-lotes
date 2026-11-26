@@ -1,7 +1,5 @@
 -- =====================================================================
 -- DATOS DE PRUEBA - MÓDULO 4: PERSONAL Y SUELDOS
--- Responsable: Ian Anci
--- Los empleados son personas naturales del módulo 2 (id 10 a 14).
 -- =====================================================================
 
 BEGIN;
