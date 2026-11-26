@@ -1,15 +1,5 @@
 -- =====================================================================
 -- MÓDULO 4: PERSONAL Y SUELDOS
--- Responsable: Ian Anci
--- Tablas: empleado, sueldo, pago_sueldo
---
--- Integridad referencial (entregable 3):
---   * Si se borra un proyecto, sus empleados se conservan y quedan sin
---     proyecto asignado (ON DELETE SET NULL).
---   * Borrar un empleado borra su historial de sueldos (ON DELETE CASCADE),
---     pero no si ya tiene sueldos pagados: pago_sueldo no tiene CASCADE.
---   * Si cambia el código de una oficina, se actualiza en sus empleados
---     (ON UPDATE CASCADE).
 -- =====================================================================
 
 BEGIN;
