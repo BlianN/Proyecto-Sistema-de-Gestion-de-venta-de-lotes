@@ -1,6 +1,5 @@
 """Modelos de entrada del Módulo 2: Ventas.
 
-Responsable: Diego Calancho
 """
 from datetime import date, datetime
 from decimal import Decimal
