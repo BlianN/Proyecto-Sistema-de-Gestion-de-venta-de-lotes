@@ -1,17 +1,5 @@
 -- =====================================================================
 -- MÓDULO 3: COBRANZA Y COMISIONES
--- Responsable: Mijael Pol Escobar
--- Tablas: oficina, cuenta_bancaria, cuota, pago, pago_cuota,
---         comision, pago_comision
--- Funciones: fn_generar_cronograma, fn_recalcular_estado_cuotas
---
--- Integridad referencial (entregable 3):
---   * Si cambia el código de una oficina, el cambio se propaga a ventas,
---     pagos y empleados (ON UPDATE CASCADE).
---   * Borrar una venta borra su cronograma de cuotas (ON DELETE CASCADE),
---     pero una venta con pagos no se puede borrar: pago -> venta no tiene
---     CASCADE, así que la base lo impide.
---   * Borrar un pago borra su aplicación a las cuotas (ON DELETE CASCADE).
 -- =====================================================================
 
 BEGIN;
