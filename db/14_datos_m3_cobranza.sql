@@ -1,7 +1,5 @@
 -- =====================================================================
 -- DATOS DE PRUEBA - MÓDULO 3 (parte 2): CUOTAS, PAGOS Y COMISIONES
--- Responsable: Mijael Pol Escobar
--- Requiere las ventas del módulo 2.
 -- =====================================================================
 
 -- 1. Cronogramas: las cuotas de cada venta en cuotas las genera la función.
