@@ -1,8 +1,6 @@
 -- =====================================================================
--- DATOS DE PRUEBA - MÓDULO 3 (parte 1): OFICINAS Y CUENTAS BANCARIAS
+-- DATOS DE PRUEBA - MÓDULO 3
 -- Responsable: Mijael Pol Escobar
--- Se cargan antes que las ventas (módulo 2), porque toda venta se
--- registra en una oficina.
 -- =====================================================================
 
 BEGIN;
