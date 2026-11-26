@@ -1,13 +1,5 @@
 -- =====================================================================
 -- MÓDULO 1: PROYECTOS Y LOTES
--- Responsable: Ian Anci
--- Tablas: proyecto, sector, manzana, lote, precio_lote
---
--- Integridad referencial (entregable 3):
---   * Borrar un proyecto borra sus sectores, manzanas, lotes y precios
---     (ON DELETE CASCADE en cadena). Si algún lote ya tiene una
---     separación o una venta, el borrado se bloquea, porque esas tablas
---     (módulo 2) apuntan al lote sin CASCADE.
 -- =====================================================================
 
 BEGIN;
